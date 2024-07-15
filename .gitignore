@@ -1,0 +1,9 @@
+/aio-passages/
+/weights.safetensors
+*.swp
+
+yarn.lock
+package-lock.json
+npm-debug.log
+yarn-error.log
+/node_modules/
