@@ -20,7 +20,7 @@ const contextSize = 256
 
 // Traning configs.
 const batchSize = 32
-const learningRate = 1e-4
+const learningRate = 2e-5
 const maxRows = Infinity
 
 main()
@@ -46,8 +46,7 @@ async function main() {
   // Calculate how many parameters the model has.
   let nparams = 0
   for (const [k, x] of utils.treeFlatten(model.parameters())) {
-    if (!k.includes('embedTokens'))
-      nparams += x.size
+    nparams += x.size
   }
   console.log(`Training Llama3 with ${(nparams / 1024 ** 2).toFixed(1)}M parameters.`)
 
@@ -67,11 +66,9 @@ async function main() {
   // Read batches from the datasets.
   let iter = 0
   let start = Date.now()
-  let lastRow = 0
   let losses = []
+  let lastRow = 0
   for await (const [row, x, y] of iterateBatches(reader, tokenizer, contextSize, batchSize)) {
-    if (lastRow > maxRows)
-      break
     // Use mx.tidy to free all the intermediate tensors immediately.
     mx.tidy(() => {
       // Compute loss and gradients, then update the model.
@@ -96,6 +93,8 @@ async function main() {
       losses = []
       lastRow = row
     }
+    if (lastRow > maxRows)
+      break
   }
   await reader.close()
 
@@ -109,7 +108,7 @@ async function* iterateBatches(reader, tokenizer, contextSize, batchSize) {
   let row = 0
   let xBatches = []
   let yBatches = []
-  for await (const data of await reader.getIterator({shuffle: true})) {
+  for await (const data of await reader.getIterator({shuffle: true, chunkSize: 1024})) {
     ++row
     // Convert text to tokens.
     const tokens = tokenizer.encode(data[3])
