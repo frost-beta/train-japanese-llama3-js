@@ -2,7 +2,7 @@
   "type": "module",
   "license": "Unlicense",
   "dependencies": {
-    "@dsnp/parquetjs": "1.7.0",
+    "@frost-beta/parquet-reader": "1.1.1",
     "@frost-beta/mlx": "0.0.14",
     "@lenml/tokenizers": "1.0.9",
     "pretty-ms": "9.0.0"
