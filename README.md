@@ -82,4 +82,5 @@ F-45は日本が開発する軍用機を発売するのが初めてで、1970年
 ## License
 
 Scripts: Public domain
+
 Tokenizer: [Apache License 2.0](https://github.com/llm-jp/llm-jp-tokenizer/blob/main/LICENSE)
